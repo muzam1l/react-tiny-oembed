@@ -1,0 +1,62 @@
+{
+  "name": "react-oembed",
+  "version": "1.0.0",
+  "description": "Oembed compatible react component for embedding content from websites",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run format && npm run lint && rollup -c",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.tsx\"",
+    "lint": "eslint \"src/**\"",
+    "prepare": "npm run build"
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "keywords": [
+    "oembed",
+    "embed",
+    "react",
+    "hooks",
+    "iframe"
+  ],
+  "author": "muzam1l https://github.com/muzam1l",
+  "license": "MIT",
+  "homepage": "https://github.com/muzam1l/react-oembed",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/muzam1l/react-oembed.git"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^16.0.0",
+    "@rollup/plugin-node-resolve": "^10.0.0",
+    "@types/minimatch": "^3.0.3",
+    "@types/react": "^16.9.56",
+    "@typescript-eslint/eslint-plugin": "^4.8.1",
+    "@typescript-eslint/parser": "^4.8.1",
+    "eslint": "^7.13.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "prettier": "^2.1.2",
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0",
+    "rollup": "^2.33.3",
+    "rollup-plugin-dts": "^1.4.14",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.29.0",
+    "tslib": "^2.0.3",
+    "typescript": "^4.0.5"
+  },
+  "dependencies": {
+    "minimatch": "^3.0.4"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  }
+}

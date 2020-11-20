@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "target": "ES5",
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
+        "module": "ESNext",
+        "declaration": false,
+        "noEmitOnError": true,
+        "checkJs": false,
+        "preserveSymlinks": true,
+        "outDir": "lib",
+        "strict": true,
+        "jsx": "react",
+        "moduleResolution": "Node",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true
+    },
+    "include": [
+        "src/index.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "lib",
+        "**/__tests__/*"
+    ]
+}
