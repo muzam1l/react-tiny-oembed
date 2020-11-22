@@ -1,7 +1,7 @@
 {
-  "name": "react-oembed",
+  "name": "react-tiny-oembed",
   "version": "1.0.0",
-  "description": "Oembed compatible react component for embedding content from websites",
+  "description": "Oembed compliant tiny react component for embedding content from websites",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -17,16 +17,17 @@
   "keywords": [
     "oembed",
     "embed",
+    "tiny",
     "react",
     "hooks",
     "iframe"
   ],
   "author": "muzam1l https://github.com/muzam1l",
   "license": "MIT",
-  "homepage": "https://github.com/muzam1l/react-oembed",
+  "homepage": "https://github.com/muzam1l/react-tiny-oembed",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/muzam1l/react-oembed.git"
+    "url": "git+https://github.com/muzam1l/react-tiny-oembed.git"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^16.0.0",
@@ -53,6 +54,7 @@
     "typescript": "^4.0.5"
   },
   "dependencies": {
+    "axios": "~0.21.0",
     "minimatch": "^3.0.4"
   },
   "peerDependencies": {

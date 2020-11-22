@@ -30,7 +30,7 @@ export default [
         output: [
             // { file: pkg.main, format: 'cjs', exports: 'auto', },
             // { file: pkg.module, format: 'es', exports: 'auto', },
-            { name: 'ReactOembed', file: pkg.main, format: 'umd', exports: 'auto' }
+            { name: 'Embed', file: pkg.main, format: 'umd', exports: 'auto' }
         ]
     },
     // For concatenated dts

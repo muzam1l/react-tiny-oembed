@@ -1,6 +1,8 @@
 /* eslint-disable camelcase */
+/* eslint-disable no-param-reassign */
 import minimatch from 'minimatch';
-import providers from './default-providers';
+import axios from 'axios';
+import defaultProviders from './default-providers';
 
 import type { EmbedRequestOptions, EmbedResponce } from './interfaces';
 /**
@@ -10,89 +12,106 @@ import type { EmbedRequestOptions, EmbedResponce } from './interfaces';
  * @param options params to the embed request
  */
 export async function requestEmbed(
-  proxy: string | undefined,
-  options: EmbedRequestOptions,
+    proxy: string | undefined,
+    providers: any[] | undefined,
+    options: EmbedRequestOptions,
 ): Promise<EmbedResponce | undefined> {
-  const endpoint = getEndpoint(options.url);
-  if (!endpoint) throw Error('Invalid url: cannot guess oembed endpoint');
+    // guess oembed url from resource url
+    const { base_url, requestInterceptor, responceInterceptor } = getEndpoint(options.url, providers);
+    if (!base_url) throw Error('Invalid url: cannot guess oembed endpoint');
+    const proxied_url = makeUrl(base_url, proxy);
 
-  const full_url = makeUrl(endpoint, proxy, options);
-  try {
-    const responce = await fetch(full_url);
-    if (responce.ok) return responce.json();
-    throw responce;
-  } catch (err) {
-    // eslint-disable-next-line
-    console.error(err);
-    return undefined;
-  }
-}
+    // axios instance to apply interceptors on
+    const instance = axios.create();
 
-export function getEndpoint(url: string): string | undefined {
-  let base_url: string | undefined;
-  providers.forEach((provider: any) => {
-    let selected: any;
-    /* for providers with endpoints.length > 1, vl pick last match, (see instagram) */
-    provider.endpoints.forEach((endpoint: any) => {
-      if (isMatch(url, endpoint.schemes)) selected = endpoint;
+    // apply interceptors
+    if (requestInterceptor) instance.interceptors.request.use(requestInterceptor as any);
+    if (responceInterceptor) instance.interceptors.response.use(responceInterceptor as any);
+
+    // send a request
+    const responce = await instance.get(proxied_url, {
+        params: options,
     });
 
-    if (selected) {
-      base_url = selected.url;
+    return responce.data;
+}
+
+/**
+ * gets the oembed endpoint url from providers list
+ * @param url // resource url for identifications
+ * @param providers // if undefined uses default ones, but [] would mean not to use default ones
+ */
+export function getEndpoint(
+    url: string,
+    providers: any[] | undefined,
+): {
+    base_url?: string;
+    requestInterceptor?: Function;
+    responceInterceptor?: Function;
+} {
+    let base_url: string | undefined;
+    let requestInterceptor: Function | undefined;
+    let responceInterceptor: Function | undefined;
+    providers = providers || defaultProviders;
+
+    providers.forEach((provider: any) => {
+        let selected: any;
+        /* for providers with endpoints.length > 1, vl pick last match, (see instagram oembed provider) */
+        provider.endpoints.forEach((endpoint: any) => {
+            if (isMatch(url, endpoint.schemes)) selected = endpoint;
+        });
+
+        if (selected) {
+            base_url = selected.url;
+            ({ requestInterceptor, responceInterceptor } = provider);
+        }
+    });
+
+    return {
+        base_url,
+        requestInterceptor,
+        responceInterceptor,
+    };
+}
+
+/**
+ * Constructs url from oembed endpoint and proxy
+ * @param base_url
+ * @param proxy
+ */
+function makeUrl(base_url: string, proxy: string | undefined): string {
+    // remove trailing slash
+    if (base_url.endsWith('/')) base_url = base_url.slice(0, -1);
+    // replace {format} placeholder
+    const format = /\{format\}/gi;
+    if (base_url.match(format)) {
+        base_url = base_url.replace(format, 'json');
     }
-  });
 
-  return base_url;
-}
-/**
- * Constructs url from oembed endpoint, proxy and oembed options
- * @param data const
- */
-function makeUrl(endpoint: string, proxy: string | undefined, options: EmbedRequestOptions): string {
-  /* eslint-disable no-param-reassign */
-  // remove trailing slash
-  if (endpoint.endsWith('/')) endpoint = endpoint.slice(0, -1);
-  // replace {format} placeholder
-  const format = /\{format\}/gi;
-  if (endpoint.match(format)) {
-    endpoint = endpoint.replace(format, 'json');
-  }
+    // return if no proxy is present
+    if (!proxy) return base_url;
 
-  options.format = 'json';
-  const search = makeSearch(options);
+    const url = /\{url\}/gi;
+    const raw_url = /\{raw_url\}/gi;
 
-  // construct url and return if no proxy is present
-  let base_url = `${endpoint}?${search}`;
-  if (!proxy) return base_url;
+    // replace {url} with base_url in proxy and return
+    if (proxy.match(raw_url)) return proxy.replace(raw_url, base_url);
 
-  // wrap in proxy and return that
-  const url = /\{url\}/gi;
-  const raw_url = /\{raw_url\}/gi;
+    // replace {raw_url} with url encoded base_url and return
+    if (proxy.match(url)) {
+        base_url = encodeURIComponent(base_url);
+        return proxy.replace(url, base_url);
+    }
 
-  if (proxy.match(raw_url)) return proxy.replace(raw_url, base_url);
-
-  if (proxy.match(url)) {
-    base_url = encodeURIComponent(base_url);
-    return proxy.replace(url, base_url);
-  }
-
-  throw Error('invalid proxy format, must contain {url | raw_url} to substitute url into');
-}
-
-/**
- * makes url search string from params object
- * @param params Object with key: value mapped to [?]key=value[&]
- */
-function makeSearch(params: object): string {
-  return Object.entries(params).reduce((cumm, val) => {
-    let ND = '&';
-    if (cumm === '') ND = '';
-    const key = encodeURIComponent(val[0]);
-    const value = encodeURIComponent(val[1]);
-    return cumm.concat(`${ND}${key}=${value}`);
-  }, '');
+    // else just append the url
+    if (proxy.endsWith('/')) proxy = proxy.slice(0, -1);
+    return `${proxy}/${base_url}`;
 }
 
 function isMatch(url: string, schemes: string[]): boolean {
-  return Boolean(schemes.find((scheme) => minimatch(url, scheme, { nocase: true })));
+    const lvl1 = Boolean(schemes.find(scheme => minimatch(url, scheme, { nocase: true })));
+    if (lvl1) return lvl1;
+
+    // search again with * replaced with ** (see soundclound provider)
+    return Boolean(schemes.find(scheme => minimatch(url, scheme.replace(/\*/g, '**'), { nocase: true })));
 }
