@@ -133,7 +133,7 @@ You can pass multiple props to Embed component, typings can be imported too as n
 
 ## Plugins
 
--   [github-gist](/#) TODO
+-   [github-gist](https://github.com/muzam1l/oembed-github-gist) - Github gist sample plugin for react-tiny-oembed without a proxy server.
 -   ...others
 
 Now we break our top rule, no exceptions, or atleast twist it a bit. While i do believe every site should support oembed instead of having custom method, but there are some who don't and some important ones like _Github_.
@@ -160,7 +160,7 @@ Example of custom provider would look like this
 
 ### Also
 
-You can also use `requestInterceptor` and `responceInterceptor` fields in Provider object, which should be [axios](https://github.com/axios/axios) interceptor functions whose goal is to convert request into oembed compatible request and responce into oembed comaptible responce, `github-gist` is one such example. But our rule is mostly intact, this component still only understands oembed.
+You can also use `requestInterceptor` and `responceInterceptor` fields in Provider object, which should be [axios](https://github.com/axios/axios) interceptor functions whose goal is to convert request into oembed compatible request and responce into oembed comaptible responce, [github-gist](https://github.com/muzam1l/oembed-github-gist) is one such example. But our rule is mostly intact, this component still only understands oembed.
 
 ## Contributing
 
