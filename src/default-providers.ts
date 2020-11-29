@@ -90,5 +90,5 @@ const providers: any[] = [
             },
         ],
     },
-];
-export default providers;
+]
+export default providers
