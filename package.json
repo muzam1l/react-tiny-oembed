@@ -1,6 +1,6 @@
 {
     "name": "react-tiny-oembed",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Oembed compliant tiny react component for embedding content from websites",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
