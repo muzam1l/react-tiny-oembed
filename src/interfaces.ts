@@ -61,3 +61,6 @@ export interface EmbedRequestOptions {
     format?: 'json'
     [extras: string]: any
 }
+
+// eslint-disable-next-line no-unused-vars
+export type GetReponceType = (options: EmbedRequestOptions) => EmbedResponce

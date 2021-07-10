@@ -137,31 +137,7 @@ You can pass multiple props to Embed component, typings can be too imported  as 
 -   [github-gist](https://github.com/muzam1l/oembed-github-gist) - Github gist sample plugin for react-tiny-oembed without a proxy server.
 -   ...others
 
-Now we break our top rule, no exceptions, or at least twist it a bit. While i do believe every site should support oembed instead of having custom method, but there are some who don't support it and some important ones like _Github_.
-
-But this component still understands _only_ oembed, so the recommended way for those sites is to create a oembed-proxy server, and referencing that in custom provider. Provider objects are self explanatory, important parts of it are `endpoints.schemes` which defines patterns of urls to match and uses _globs_ matched by [minimatch](https://github.com/isaacs/minimatch) and `endpoints.url` which defines oembed compatible url, see [https://oembed.com](https://oembed.com/)
-
-Example of custom provider would look like this
-
-```json
- {
-        "provider_name": "My Provider",
-        "provider_url": "https://myurl.com/",
-        "endpoints": [{
-            "schemes": [
-                "https://github.com/**"
-            ],
-            "url": "https://proxyurl.com/{raw_url}",
-            "discovery": true
-        }]
-},
-```
-
-> Note: `{raw_url}` and `{url}` are placeholders that can be present in `endpoints.url` to specify where the url will be substituted, `{url}` will be replaced by url-encoded url and must be decoded on server accordingly, if both are omitted, url will simply be appended.
-
-### Also
-
-You can also use `requestInterceptor` and `responceInterceptor` fields in Provider object, which should be [axios](https://github.com/axios/axios) interceptor functions whose goal is to convert request into oembed compatible request and responce into oembed compatible responce, [github-gist](https://github.com/muzam1l/oembed-github-gist) is one such example. But our rule is mostly intact, this component still only understands oembed.
+For authoring plugins see [PLUGINS](./PLUGINS.md)
 
 ## Contributing
 

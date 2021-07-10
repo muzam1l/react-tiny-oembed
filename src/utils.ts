@@ -4,7 +4,7 @@ import minimatch from 'minimatch'
 import axios from 'axios'
 import defaultProviders from './default-providers'
 
-import type { EmbedRequestOptions, EmbedResponce } from './interfaces'
+import type { EmbedRequestOptions, EmbedResponce, GetReponceType } from './interfaces'
 /**
  *
  * @param endpoint Like `https:\/\/www.youtube.com\/`
@@ -17,8 +17,11 @@ export async function requestEmbed(
     options: EmbedRequestOptions,
 ): Promise<EmbedResponce | undefined> {
     // guess oembed url from resource url
-    const { base_url, requestInterceptor, responceInterceptor } = getEndpoint(options.url, providers)
+    const { base_url, requestInterceptor, responceInterceptor, getResponce } = getEndpoint(options.url, providers)
     if (!base_url) throw Error('Invalid url: cannot guess oembed endpoint')
+
+    if (base_url === 'OVERRIDE') return getResponce?.(options)
+
     const proxied_url = makeUrl(base_url, proxy)
 
     // axios instance to apply interceptors on
@@ -48,10 +51,13 @@ export function getEndpoint(
     base_url?: string
     requestInterceptor?: Function
     responceInterceptor?: Function
+    // eslint-disable-next-line no-unused-vars
+    getResponce?: GetReponceType
 } {
     let base_url: string | undefined
     let requestInterceptor: Function | undefined
     let responceInterceptor: Function | undefined
+    let getResponce: GetReponceType | undefined
     providers = providers || defaultProviders
 
     providers.forEach((provider: any) => {
@@ -63,7 +69,7 @@ export function getEndpoint(
 
         if (selected) {
             base_url = selected.url
-            ;({ requestInterceptor, responceInterceptor } = provider)
+            ;({ requestInterceptor, responceInterceptor, getResponce } = provider)
         }
     })
 
@@ -71,6 +77,7 @@ export function getEndpoint(
         base_url,
         requestInterceptor,
         responceInterceptor,
+        getResponce,
     }
 }
 
