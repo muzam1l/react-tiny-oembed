@@ -1,4 +1,4 @@
-# React Tiny Oembed [![version](https://img.shields.io/npm/v/react-tiny-oembed.svg)](https://www.npmjs.com/package/react-tiny-oembed) [![minzipped bundle](https://img.shields.io/bundlephobia/minzip/react-tiny-oembed?label=minzipped%20bundle)](https://www.npmjs.com/package/react-tiny-oembed) 
+# React Tiny Oembed [![version](https://img.shields.io/npm/v/react-tiny-oembed.svg)](https://www.npmjs.com/package/react-tiny-oembed) [![npm bundle](https://img.shields.io/bundlephobia/minzip/react-tiny-oembed?label=npm%20bundle)](https://www.npmjs.com/package/react-tiny-oembed) [![gzip size](https://img.badgesize.io/https://github.com/muzam1l/react-tiny-oembed/releases/download/1.1.0/index.js?compression=gzip&label=gzip)](https://github.com/muzam1l/react-tiny-oembed/releases)
 
 React component for embedding content from sites going [oEembed](https://oembed.com/) way and only\* oembed way. Just give it a url and it will do the rest, no more paying for widgets!
 
