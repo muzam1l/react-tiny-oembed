@@ -4,7 +4,13 @@ const providers: any[] = [
         provider_url: 'https://www.youtube.com/',
         endpoints: [
             {
-                schemes: ['https://*.youtube.com/watch*', 'https://*.youtube.com/v/*', 'https://youtu.be/*'],
+                schemes: [
+                    'https://*.youtube.com/watch*',
+                    'https://*.youtube.com/v/*',
+                    'https://youtu.be/*',
+                    'https://*.youtube.com/shorts/*',
+                    'https://youtube.com/shorts/*',
+                ],
                 url: 'https://www.youtube.com/oembed',
                 discovery: true,
             },
